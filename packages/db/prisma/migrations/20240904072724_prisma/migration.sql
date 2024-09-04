@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "GameStatus" AS ENUM ('IN_PROGRESS', 'COMPLETED', 'ABANDONED');
+CREATE TYPE "GameStatus" AS ENUM ('IN_PROGRESS', 'COMPLETED', 'ABANDONED', 'TIME_UP', 'PLAYER_EXIT');
 
 -- CreateEnum
 CREATE TYPE "GameResult" AS ENUM ('WHITE_WINS', 'BLACK_WINS', 'DRAW');
@@ -7,12 +7,17 @@ CREATE TYPE "GameResult" AS ENUM ('WHITE_WINS', 'BLACK_WINS', 'DRAW');
 -- CreateEnum
 CREATE TYPE "TimeControl" AS ENUM ('CLASSICAL', 'RAPID', 'BLITZ', 'BULLET');
 
+-- CreateEnum
+CREATE TYPE "AuthProvider" AS ENUM ('EMAIL', 'GOOGLE', 'GITHUB', 'GUEST');
+
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
-    "username" TEXT NOT NULL,
+    "username" TEXT,
+    "name" TEXT,
     "email" TEXT NOT NULL,
-    "password" TEXT NOT NULL,
+    "provider" "AuthProvider" NOT NULL,
+    "password" TEXT,
     "rating" INTEGER NOT NULL DEFAULT 1200,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "lastLogin" TIMESTAMP(3),
@@ -43,12 +48,14 @@ CREATE TABLE "Move" (
     "id" TEXT NOT NULL,
     "gameId" TEXT NOT NULL,
     "moveNumber" INTEGER NOT NULL,
-    "notation" TEXT NOT NULL,
+    "from" TEXT NOT NULL,
+    "to" TEXT NOT NULL,
     "comments" TEXT,
-    "startFen" TEXT NOT NULL,
-    "endFen" TEXT NOT NULL,
+    "before" TEXT NOT NULL,
+    "after" TEXT NOT NULL,
     "timeTaken" INTEGER DEFAULT 0,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "san" TEXT,
 
     CONSTRAINT "Move_pkey" PRIMARY KEY ("id")
 );
